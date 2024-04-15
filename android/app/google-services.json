@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "875747812733",
+    "project_id": "lilacmtest",
+    "storage_bucket": "lilacmtest.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:875747812733:android:cdf6f5337be86503b8d814",
+        "android_client_info": {
+          "package_name": "com.example.my_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZgDE-Yrns1wc_7UFvwRfOG_pyXmnyPkA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

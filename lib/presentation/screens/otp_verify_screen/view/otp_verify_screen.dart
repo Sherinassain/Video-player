@@ -1,0 +1,301 @@
+import 'dart:async';
+
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:my_app/core/constants/color.dart';
+import 'package:my_app/core/constants/textstyle.dart';
+import 'package:my_app/core/utiles/utiles.dart';
+import 'package:my_app/presentation/screens/otp_verify_screen/controller/otp_verify_controller.dart';
+import 'package:my_app/routes/index.dart';
+import 'package:pinput/pin_put/pin_put.dart';
+
+class OtpVerifyScreen extends StatefulWidget {
+  const OtpVerifyScreen({Key? key}) : super(key: key);
+  @override
+  State<OtpVerifyScreen> createState() => _OtpVerifyScreenState();
+}
+
+class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
+  final FocusNode _pinPutFocusNode = FocusNode();
+
+
+
+  final verifyOtpScreenCtrl = Get.put(OtpVerifyController());
+  bool validationKey = false;
+
+  BoxDecoration get _pinPutDecoration {
+    return BoxDecoration(
+      borderRadius: BorderRadius.circular(12),
+    );
+  }
+
+  late Timer _timer;
+
+  int _remainingSeconds = 20;
+
+  bool _showText = true;
+  void _startTimer() {
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (_remainingSeconds > 0) {
+        setState(() {
+          _remainingSeconds--;
+        });
+      } else {
+        setState(() {
+          _showText = !_showText;
+        });
+        _timer.cancel();
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _startTimer();
+  }
+
+  @override
+  void dispose() {
+    verifyOtpScreenCtrl.verifyOtpController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: ColorConst.white,
+      appBar: AppBar(
+        automaticallyImplyLeading: true,
+        foregroundColor: ColorConst.black1F,
+        elevation: 0,
+        backgroundColor: ColorConst.white,
+        centerTitle: true,
+        title: Text(
+          "Verification",
+          style: TextStyleClass.poppinsMedium(
+            size: 20.0,
+            color: ColorConst.black1F,
+          ),
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 35),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Column(
+            children: [
+              SizedBox(
+                height: 20,
+              ),
+              Text(
+                "We’ve Send You The Verification\nCode On 999999999999",
+                style: TextStyleClass.poppinsRegular(
+                  size: 15.0,
+                  color: ColorConst.black1F,
+                ),
+              ),
+              SizedBox(
+                height: 30,
+              ),
+              Container(
+                color: ColorConst.white,
+                child: Form(
+                  // key: verifyOtpScreenCtrl.otpFormKey,
+                  child: PinPut(
+                    validator: (value) {
+                      if (value == null || value.length != 4) {
+                        setState(() {
+                          validationKey = true;
+                        });
+                        return "OTP incomplete";
+                      }
+                      setState(() {
+                        validationKey = false;
+                      });
+    
+                      return null;
+                    },
+                    controller: verifyOtpScreenCtrl.verifyOtpController,
+                    fieldsCount: 4,
+                    textStyle: TextStyleClass.poppinsMedium(
+                      size: 24.0,
+                      color: ColorConst.black1F,
+                    ),
+                    cursorColor: ColorConst.appColor,
+                    eachFieldHeight: 55,
+                    eachFieldWidth: 55,
+                    focusNode: _pinPutFocusNode,
+                    submittedFieldDecoration: _pinPutDecoration.copyWith(
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: ColorConst.grey83,
+                      ),
+                      color: ColorConst.white,
+                    ),
+                    selectedFieldDecoration: _pinPutDecoration.copyWith(
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: ColorConst.appColor,
+                      ),
+                      color: ColorConst.white,
+                    ),
+                    followingFieldDecoration: _pinPutDecoration.copyWith(
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: ColorConst.grey83,
+                      ),
+                      color: ColorConst.white,
+                    ),
+                    disabledDecoration: _pinPutDecoration.copyWith(
+                      borderRadius: BorderRadius.circular(12),
+                      color: ColorConst.white,
+                      border: Border.all(
+                        color: ColorConst.grey83,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Visibility(
+                visible: validationKey,
+                child: Text(
+                  'OTP incomplete',
+                  style: TextStyleClass.poppinsRegular(
+                    color: ColorConst.red,
+                    size: 12.0,
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 30,
+              ),
+              (_showText == true)
+                  ? RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: "Re-send code in ",
+                            style: TextStyleClass.poppinsRegular(
+                              color: ColorConst.black1F,
+                              size: 15.0,
+                            ),
+                          ),
+                          TextSpan(
+                            text: "$_remainingSeconds",
+                            style: TextStyleClass.poppinsRegular(
+                              color: ColorConst.appColor,
+                              size: 15.0,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  : 
+                  // Obx(
+                  //     () => (sendOtpDetailScreenCtrl.isOtpSendLoading.value ==
+                  //             true)
+                  //         ? CommonProgressIndicator(
+                  //             indicatorColor: ColorConst.appColor,
+                  //           )
+                  //         : 
+                          GestureDetector(
+                              onTap: () async {
+                                // await sendOtpDetailScreenCtrl
+                                //     .sendDeliveryOtp(
+                                //   orderId: orderDetailScreenCtrl
+                                //       .orderDetailRes!.id
+                                //       .toString(),
+                                // )
+                                //     .then((value) {
+                                //   if (sendOtpDetailScreenCtrl
+                                //           .otpSendSuccess.value ==
+                                //       true) {
+                                //     setState(() {
+                                //       _remainingSeconds = 20;
+                                //       _showText = true;
+                                //       _startTimer();
+                                //     });
+                                //   }
+                                // });
+                                // print(
+                                //     "Resend otp order id : ${orderDetailScreenCtrl.orderDetailRes!.id.toString()}");
+                              },
+                              child: Container(
+                                width: 130,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                color: ColorConst.green3D,
+                                    borderRadius: BorderRadius.circular(8)),
+                                child: Center(
+                                  child: Text(
+                                    "Re-send OTP",
+                                    style: TextStyleClass.poppinsRegular(
+                                      color: ColorConst.white,
+                                      size: 15.0,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                    
+              SizedBox(
+                height: Get.height / 2.2,
+              ),
+              Padding(
+                  padding: const EdgeInsets.only(
+                      bottom: 30, left: 2.5, right: 2.5),
+                  child: 
+                  // Obx(
+                  //   () =>
+                  //       (verifyOtpScreenCtrl.isOtpVerifyLoading.value == true)
+                  //           ? CommonProgressIndicator(
+                  //               indicatorColor: ColorConst.appColor,
+                  //             )
+                  //           : 
+                            CommonButton(
+                                                              color: ColorConst.green3D,
+
+                                title: "Verify",
+                                fontSize: 20.0,
+                                onPresss: () async {
+                                  Get.toNamed(routeName.homeScreen);
+                                  // print(
+                                  //     'Otp  field text :${verifyOtpScreenCtrl.verifyOtpController.text}');
+                                  // print(
+                                  //     ' Verify otp Order id : ${orderDetailScreenCtrl.orderDetailRes!.id.toString()}');
+                                  // if (verifyOtpScreenCtrl
+                                  //     .otpFormKey.currentState!
+                                  //     .validate()) {
+                                  //   await verifyOtpScreenCtrl
+                                  //       .verifyDeliveryOtp(
+                                  //           orderId: orderDetailScreenCtrl
+                                  //               .orderDetailRes!.id
+                                  //               .toString(),
+                                  //           otp: verifyOtpScreenCtrl
+                                  //               .verifyOtpController.text)
+                                  //       .then((value) {
+                                  //     if (verifyOtpScreenCtrl
+                                  //             .otpVerifySuccess.value ==
+                                  //         true) {
+                                  //       Get.toNamed(
+                                  //           routeName.deliveryDetailScreen);
+                                  //       // Get.to(
+                                  //       //   () => DeliveryDetailScreen(),
+                                  //       // );
+                                  //     }
+                                  //   });
+                                  // }
+                                },
+                              
+                  )),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
