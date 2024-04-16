@@ -8,6 +8,8 @@ class RouteName {
     final String otpVerifyScreen = '/OtpVerifyScreen';
 
     final String profileScreen = '/ProfileScreen';
+        final String offlineVideoPlayer = '/OfflineVideoPlayer';
+
 
 
  

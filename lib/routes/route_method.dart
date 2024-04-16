@@ -7,6 +7,7 @@ import 'package:my_app/presentation/screens/otp_verify_screen/view/otp_verify_sc
 import 'package:my_app/presentation/screens/profile_screen/profile_screen.dart';
 import 'package:my_app/presentation/screens/splash_screen/view/splash_screen.dart';
 import 'package:my_app/presentation/screens/user_registration_screen/view/user_registration.dart';
+import 'package:my_app/presentation/widgets/common/offline_video_player.dart';
 import 'package:my_app/routes/index.dart';
 
 import 'route_name.dart';
@@ -36,5 +37,8 @@ class AppRoute {
            GetPage(
         name: _routeName.profileScreen, page: () => const  ProfileScreen(),
         ),  
+        //  GetPage(
+        // name: _routeName.offlineVideoPlayer, page: () => const  OfflineVideoPlayer(),
+        // ),  
   ];
 }
