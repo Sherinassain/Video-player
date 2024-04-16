@@ -7,6 +7,8 @@ class RouteName {
     final String networkErrorScreen = '/NetworkErrorScreen';
     final String otpVerifyScreen = '/OtpVerifyScreen';
 
+    final String profileScreen = '/ProfileScreen';
+
 
  
 
