@@ -113,7 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   loadVideoPlayer() {
     controller = VideoPlayerController.network(
-        'https://youtu.be/1-o32PS9bbg?si=U6c4oVGwS_hLfcX4');
+        'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4');
     controller.addListener(() {
       setState(() {});
     });
