@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "875747812733",
-    "project_id": "lilacmtest",
-    "storage_bucket": "lilacmtest.appspot.com"
+    "project_number": "385067701914",
+    "project_id": "video-test-2ae07",
+    "storage_bucket": "video-test-2ae07.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:875747812733:android:cdf6f5337be86503b8d814",
+        "mobilesdk_app_id": "1:385067701914:android:ab0112f1137f6fa9b67123",
         "android_client_info": {
-          "package_name": "com.example.my_app"
+          "package_name": "com.example.videoPlayer"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAZgDE-Yrns1wc_7UFvwRfOG_pyXmnyPkA"
+          "current_key": "AIzaSyCukiuo-42pQ1M6nv3jkp6Lr1GLcMH7490"
         }
       ],
       "services": {
