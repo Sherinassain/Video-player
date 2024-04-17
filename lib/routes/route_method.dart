@@ -17,7 +17,7 @@ class AppRoute {
   final List<GetPage> getPages = [
 
  GetPage(
-      name: routeName.splashScreen,
+      name: _routeName.splashScreen,
       page: () => const SplashScreen(),
     ),        GetPage(
         name: _routeName.loginScreen, page: () =>  LoginScreen(),
@@ -36,7 +36,7 @@ class AppRoute {
         name: _routeName.otpVerifyScreen, page: () =>  const OtpVerifyScreen(),
         ),
            GetPage(
-        name: _routeName.profileScreen, page: () => const  ProfileScreen(),
+        name: _routeName.profileScreen, page: () =>   ProfileScreen(),
         ),  
         //  GetPage(
         // name: _routeName.offlineVideoPlayer, page: () => const  OfflineVideoPlayer(),
