@@ -1,4 +1,3 @@
-
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:my_app/presentation/screens/home_screen/view/home_screen.dart';
 import 'package:my_app/presentation/screens/login_screen/view/login_screen.dart';
@@ -16,9 +15,11 @@ RouteName _routeName = RouteName();
 
 class AppRoute {
   final List<GetPage> getPages = [
-    GetPage(
-        name: routeName.splashScreen, page: () => const SplashScreen(),),
-        GetPage(
+
+ GetPage(
+      name: routeName.splashScreen,
+      page: () => const SplashScreen(),
+    ),        GetPage(
         name: _routeName.loginScreen, page: () =>  LoginScreen(),
         
         ),
@@ -40,5 +41,6 @@ class AppRoute {
         //  GetPage(
         // name: _routeName.offlineVideoPlayer, page: () => const  OfflineVideoPlayer(),
         // ),  
+
   ];
 }

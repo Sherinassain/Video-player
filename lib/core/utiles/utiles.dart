@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:my_app/core/constants/color.dart';
 import 'package:my_app/core/constants/textstyle.dart';
 
-
 ///common button
 // ignore: must_be_immutable
 class CommonButton extends StatelessWidget {
@@ -48,7 +47,7 @@ class TextFormFieldCom extends StatelessWidget {
   var onTap;
   var enable;
   var obscure;
-  var prificx;
+  var prefix;
   var keyBoardType;
   var onChange;
   var suffix;
@@ -68,7 +67,7 @@ class TextFormFieldCom extends StatelessWidget {
     this.obscure,
     this.keyBoardType,
     this.onChange,
-    this.prificx,
+    this.prefix,
     this.suffix,
     this.validator,
     this.formKey,
@@ -104,7 +103,7 @@ class TextFormFieldCom extends StatelessWidget {
                   Icons.edit,
                   color: ColorConst.appColor,
                 ),*/
-          prefixIcon: prificx ?? SizedBox.shrink(),
+          prefixIcon: prefix ?? SizedBox.shrink(),
           /*Icon(
             Icons.email_outlined,
             color: ColorConst.appColor,

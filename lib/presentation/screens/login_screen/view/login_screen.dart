@@ -1,21 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_exit_app/flutter_exit_app.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-
-import 'package:get/get_core/src/get_main.dart';
 import 'package:my_app/core/common/scale.dart';
 import 'package:my_app/core/constants/color.dart';
-import 'package:my_app/core/constants/image.dart';
 import 'package:my_app/core/constants/textstyle.dart';
 import 'package:my_app/core/utiles/app_screen_util.dart';
 import 'package:my_app/core/utiles/utiles.dart';
 import 'package:my_app/presentation/screens/login_screen/controller/login_controller.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-
-import 'package:flutter_exit_app/flutter_exit_app.dart';
 import 'package:my_app/routes/index.dart';
+import 'package:pinput/pinput.dart';
 
 class LoginScreen extends StatefulWidget {
-  LoginScreen({super.key});
+  const LoginScreen({super.key});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -24,6 +21,20 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final loginCtrl = Get.put(LoginController());
   DateTime? lastPressed;
+
+  String? validatePhoneNumber(
+    String? value,
+  ) {
+    // final usedNumber = context.read<OtpVerificationProvider>().isUsedNumber;
+    final phoneNumberValidator = value?.trim();
+    if (phoneNumberValidator!.isEmpty) {
+      return 'Phone number is required';
+    }
+    if (phoneNumberValidator.length != 10) {
+      return 'Please enter a valid phone number';
+    }
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,57 +96,38 @@ class _LoginScreenState extends State<LoginScreen> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          // const    Text(
-                          //       "Login",
-                          //       style:TextStyle(color: Colors.black, fontSize: 28.0)
-                          //     ),
                           SizedBox(
                             height: AppScreenUtil().screenHeight(40),
                           ),
                           TextFormFieldCom(
-                            formKey: loginCtrl.emailFormKey,
-                            controller: loginCtrl.emailController,
-                            hintText: 'Email',
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return "Please enter an email address";
-                              }
-
-                              // Define a regular expression for email validation
-                              final emailRegex = RegExp(
-                                  r"^[a-zA-Z0-9.a-zA-Z0-9!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
-
-                              if (!emailRegex.hasMatch(value)) {
-                                return "Please enter a valid email address";
-                              }
-
-                              return null;
-                            },
-                          ),
-                          SizedBox(
-                            height: AppScreenUtil().screenHeight(20),
-                          ),
-                          TextFormFieldCom(
-                            formKey: loginCtrl.passwordFormKey,
-                            controller: loginCtrl.passwordController,
-                            hintText: 'Password',
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return "Please enter valid password";
-                              }
-
-                              // Define a regular expression for email validation
-        final passwordRegex = RegExp(r'^.{8,}$');
-
-                              if (!passwordRegex.hasMatch(value)) {
-                                return "Please enter valid password";
-                              }
-
-                              return null;
-                            },
-                          ),
+                              prefix: const Icon(Icons.phone_android_outlined),
+                              // formKey: loginCtrl.emailFormKey,
+                              controller: loginCtrl.emailController,
+                              hintText: 'Phone Number',
+                              validator: (value) => validatePhoneNumber(value)),
                           SizedBox(
                             height: AppScreenUtil().screenHeight(30),
+                          ),
+                          Obx(
+                            () => ((loginCtrl.otpSend.value == true))
+                                ? Column(
+                                    children: [
+                                      Pinput(
+                                        length: 6,
+                                        controller: loginCtrl.otpController,
+                                        pinputAutovalidateMode:
+                                            PinputAutovalidateMode.onSubmit,
+                                        onCompleted: (value) {
+                                          loginCtrl.signInWithPhoneNumber();
+                                        },
+                                      ),
+                                      SizedBox(
+                                        height:
+                                            AppScreenUtil().screenHeight(30),
+                                      ),
+                                    ],
+                                  )
+                                : const SizedBox(),
                           ),
                           Obx(
                             () => (loginCtrl.isLoading.value == true)
@@ -143,40 +135,17 @@ class _LoginScreenState extends State<LoginScreen> {
                                     strokeWidth: 2,
                                     color: ColorConst.green3D,
                                   )
-                                :
-                          CommonButton(
-                            color: ColorConst.green3D,
-                            title: "Login",
-                            fontSize: FontSizes.f15,
-                            onPresss: () {
-                              if (loginCtrl.emailFormKey.currentState!
-                                      .validate() &&
-                                  loginCtrl.passwordFormKey.currentState!
-                                      .validate()) {
-                                        loginCtrl.login();
-                                      }
-                        
-                            },
-                          ),),
-
-                          SizedBox(
-                            height: AppScreenUtil().screenHeight(20),
+                                : CommonButton(
+                                    color: ColorConst.green3D,
+                                    title: "Send OTP",
+                                    fontSize: FontSizes.f15,
+                                    onPresss: () {
+                                      loginCtrl.login();
+                                    },
+                                  ),
                           ),
-                          // Align(
-                          //   alignment: Alignment.topRight,
-                          //   child: GestureDetector(
-                          //     onTap: () {
-                          //       Get.toNamed(routeName.forgotPasswordScreen);
-                          //     },
-                          //     child: Text(
-                          //       "Forgot password",
-                          //       style: TextStyleClass.poppinsMedium(
-                          //           color: Colors.blueAccent, size: 15.0),
-                          //     ),
-                          //   ),
-                          // ),
                           SizedBox(
-                            height: AppScreenUtil().screenHeight(100),
+                            height: AppScreenUtil().screenHeight(180),
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
