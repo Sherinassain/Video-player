@@ -171,6 +171,7 @@ class _UserRegistrationState extends State<UserRegistration> {
                         SizedBox(
                           height: AppScreenUtil().screenHeight(30),
                         ),
+                      Obx(() =>   (userRegCtrl.isLoading.value == true)?CircularProgressIndicator(strokeWidth: 2,color: ColorConst.green3D):
                         CommonButton(
                           color: ColorConst.green3D,
                           title: "Send otp",
@@ -178,7 +179,7 @@ class _UserRegistrationState extends State<UserRegistration> {
                           onPresss: () {
                             userRegCtrl.sendOtp(context);
                           },
-                        ),
+                        ),)
                         // ),
                       ],
                     ),

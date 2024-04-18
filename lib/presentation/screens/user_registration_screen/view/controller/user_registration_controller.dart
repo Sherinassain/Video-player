@@ -35,9 +35,9 @@ class UserRegistrationController extends GetxController {
       AppUtils.oneTimeSnackBar("An error occurred. Please try again later.",
           bgColor: Colors.red, time: 3);
       print('Error signing in: $error');
-    } finally {
-      isLoading.value = false;
-    }
+            isLoading.value = false;
+
+    } 
   }
 
   Future<String?> getPhoneNumber(String uid) async {
@@ -68,6 +68,7 @@ class UserRegistrationController extends GetxController {
   }
 
   Future<void> _verifyPhoneNumber(BuildContext context) async {
+
     final phoneNumber = '+91${phoneController.text.trim()}';
 
     // Check if the phone number is already registered
@@ -93,12 +94,16 @@ class UserRegistrationController extends GetxController {
           return;
         }
         otpSend.value = true;
+                  isLoading.value = false;
+
       },
       verificationFailed: (FirebaseAuthException e) {
         print(e.message);
         print(e.code);
         AppUtils.oneTimeSnackBar(e.message ?? "Unknown error occurred",
             bgColor: Colors.red, time: 3);
+                      isLoading.value = false;
+
       },
       codeSent: (String verificationId, int? resendToken) {
         _verificationId = verificationId;
@@ -115,9 +120,12 @@ class UserRegistrationController extends GetxController {
                       phone: phoneController.text.trim(),
                     )),
             (route) => false);
+                      isLoading.value = false;
+
       },
       codeAutoRetrievalTimeout: (String verificationId) {
         _verificationId = verificationId;
+        
       },
     );
   }
