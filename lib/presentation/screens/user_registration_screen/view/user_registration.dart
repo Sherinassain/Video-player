@@ -53,7 +53,7 @@ class _UserRegistrationState extends State<UserRegistration> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      userRegCtrl.listenToUsers();
+      // userRegCtrl.listenToUsers();
     });
   }
 

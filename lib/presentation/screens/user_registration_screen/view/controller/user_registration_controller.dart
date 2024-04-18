@@ -1,5 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:my_app/core/utiles/app_utils.dart';
@@ -18,11 +18,13 @@ class UserRegistrationController extends GetxController {
   final GlobalKey<FormState> firstNameFormkey = GlobalKey<FormState>();
   // final GlobalKey<FormState> dobFormKey = GlobalKey<FormState>();
   // final GlobalKey<FormState> phoneFormKey = GlobalKey<FormState>();
+  final databaseRef = FirebaseDatabase.instance.ref();
 
   RxBool isLoading = false.obs;
   RxBool otpSend = false.obs;
   String? _verificationId;
   String? uid;
+  String? number;
   Future<void> sendOtp(BuildContext context) async {
     isLoading.value = true;
     // if (!firstNameFormkey.currentState!.validate()) {
@@ -30,45 +32,41 @@ class UserRegistrationController extends GetxController {
     //   return;
     // }
     try {
-      await _verifyPhoneNumber(context);
+      await verifyPhoneNumber(context);
     } catch (error) {
       AppUtils.oneTimeSnackBar("An error occurred. Please try again later.",
           bgColor: Colors.red, time: 3);
       print('Error signing in: $error');
-            isLoading.value = false;
-
-    } 
-  }
-
-  Future<String?> getPhoneNumber(String uid) async {
-    try {
-      // Reference to the Firestore document
-      DocumentReference docRef =
-          FirebaseFirestore.instance.collection('users').doc(uid);
-
-      // Get the document
-      DocumentSnapshot docSnapshot = await docRef.get();
-
-      // Check if the document exists
-      if (docSnapshot.exists) {
-        // Extract the phone number from the document data
-        final phoneNumber = docSnapshot.data() as Map<String, dynamic>?;
-        String number = phoneNumber?['phone'];
-        return number;
-      } else {
-        // Handle the case where there is no user data available
-        print("No user found for UID: $uid");
-        return null;
-      }
-    } catch (e) {
-      // Print error message if something goes wrong
-      print("Error fetching user data: $e");
-      return null;
+    } finally {
+      isLoading.value = false;
     }
   }
 
-  Future<void> _verifyPhoneNumber(BuildContext context) async {
+  Future<void> getPhoneNumber(String uid) async {
+    // DatabaseReference starCountRef = FirebaseDatabase.instance.ref();
+    DataSnapshot? snapshot;
+    snapshot = await databaseRef.child('users/$uid').get();
+    // } else {
+    // snapshot = await starCountRef.child('data/${userModel.parentUuid}').get();
+    // }
+    // final snapshot = await starCountRef.child('data/${userModel.uuid}').get();
+    if (snapshot.exists) {
+      if ((snapshot.value! as Map)['phone_number'] != null) {
+        // setState(() {
+        //   if (userModel.isParentUser) {
+        number = (snapshot.value! as Map)['phone_number'];
+        // [userModel.uuid]['balance'];
+        // } else {
+        //   creditsAvailable = (snapshot?.value! as Map)['balance'];
+      }
+      // // [userModel.parentUuid]['balance'];
+      // }
+      // );
+    }
+  }
+// }
 
+  Future<void> verifyPhoneNumber(BuildContext context) async {
     final phoneNumber = '+91${phoneController.text.trim()}';
 
     // Check if the phone number is already registered
@@ -82,28 +80,23 @@ class UserRegistrationController extends GetxController {
           verificationId: credential.verificationId!,
           smsCode: otpController.text.trim(),
         );
-
         final User? user =
             (await FirebaseAuth.instance.signInWithCredential(credential)).user;
         uid = user?.uid;
-        final phoneQuery = getPhoneNumber(uid ?? "");
+        await getPhoneNumber(uid ?? "");
 
-        if (phoneQuery == phoneNumber) {
+        if (number == phoneNumber) {
           AppUtils.oneTimeSnackBar("Phone number is already registered",
               bgColor: Colors.red, time: 3);
           return;
         }
         otpSend.value = true;
-                  isLoading.value = false;
-
       },
       verificationFailed: (FirebaseAuthException e) {
         print(e.message);
         print(e.code);
         AppUtils.oneTimeSnackBar(e.message ?? "Unknown error occurred",
             bgColor: Colors.red, time: 3);
-                      isLoading.value = false;
-
       },
       codeSent: (String verificationId, int? resendToken) {
         _verificationId = verificationId;
@@ -120,36 +113,33 @@ class UserRegistrationController extends GetxController {
                       phone: phoneController.text.trim(),
                     )),
             (route) => false);
-                      isLoading.value = false;
-
       },
       codeAutoRetrievalTimeout: (String verificationId) {
         _verificationId = verificationId;
-        
       },
     );
   }
 
   Future<void> confirmCodeAndRegister(String? verificationId, String? phone,
-      String? email, String? name, String? dob) async {
+      String? email, String? name, String? dob,
+      {required BuildContext context}) async {
     try {
       final AuthCredential credential = PhoneAuthProvider.credential(
         verificationId: verificationId!,
         smsCode: otpController.text.trim(),
       );
-
       final User? user =
           (await FirebaseAuth.instance.signInWithCredential(credential)).user;
-
-      if (user != null) {
-        await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
-          'name': name,
-          'email': email,
-          'phone': phone,
-          'date_of_birth': dob,
-        });
+      await listenToUsers(user?.uid ?? "");
+      if (number != phoneController.text.trim()) {
+        databaseRef.child("users/${user?.uid}").set(
+            {'name': name, 'email': email, 'phone_number': phone, 'dob': dob});
         Get.offNamed(routeName.homeScreen);
-        print("User signed up and data saved: ${user.uid}");
+        print("User signed up and data saved: ${user?.uid}");
+      } else {
+        Navigator.pop(context);
+        AppUtils.oneTimeSnackBar("Already registered, please login",
+            bgColor: Colors.red, time: 3);
       }
     } catch (e) {
       AppUtils.oneTimeSnackBar("Failed to sign in: $e",
@@ -158,14 +148,43 @@ class UserRegistrationController extends GetxController {
     }
   }
 
-  void listenToUsers() {
-    FirebaseFirestore.instance
-        .collection('users')
-        .snapshots()
-        .listen((snapshot) {
-      for (final DocumentSnapshot document in snapshot.docs) {
-        print(document.data());
+  Future<void> listenToUsers(String uid) async {
+    // databaseRef.onValue.listen(
+    //   (DatabaseEvent event) {
+    //     final data = event.snapshot.value;
+    //     if ((data as Map)['users'].containsKey(uid)) {
+    //       number = (data)['users'][uid]['phone_number'];
+    //       // Handle the data as required, possibly updating UI elements
+    //     } else {
+    //       number = null;
+    //       otpSend.value = false;
+    //     }
+    //   },
+    //   onError: (error) {
+    //     // Handle errors or situations where the data cannot be retrieved
+    //     print("Error occurred: $error");
+    //   },
+    // );
+    //  if (userModel.isParentUser) {
+    DataSnapshot? snapshot;
+    snapshot = await databaseRef.child('data/$uid').get();
+    // } else {
+    // snapshot = await starCountRef.child('data/${userModel.parentUuid}').get();
+    // }
+    // final snapshot = await starCountRef.child('data/${userModel.uuid}').get();
+    if (snapshot.exists) {
+      if ((snapshot.value! as Map)['phone_number'] != null) {
+        // setState(() {
+        // if (userModel.isParentUser) {
+        number = (snapshot.value! as Map)['phone_number'];
+        // [userModel.uuid]['balance'];
+        // } else {
+        //   creditsAvailable = (snapshot?.value! as Map)['balance'];
+        //   // [userModel.parentUuid]['balance'];
+        // }
+        // });
       }
-    });
+    }
+    // return true;
   }
 }
