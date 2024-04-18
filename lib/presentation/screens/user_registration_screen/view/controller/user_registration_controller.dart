@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 import 'package:my_app/core/utiles/app_utils.dart';
 import 'package:my_app/presentation/screens/otp_verify_screen/view/otp_verify_screen.dart';
 
+import '../../../../../core/utiles/shared_pref_helper.dart';
+import '../../../../../core/utiles/shared_pref_key.dart';
 import '../../../../../routes/index.dart';
 
 class UserRegistrationController extends GetxController {
@@ -142,6 +144,8 @@ class UserRegistrationController extends GetxController {
       if (number != phone) {
         databaseRef.child("users/${user?.uid}").set(
             {'name': name, 'email': email, 'phone_number': phone, 'dob': dob});
+        SharedPreferenceHelper()
+            .writeBoolData(SharedPreferencesKeys.isLoggedIn, true);
         Get.offNamed(routeName.homeScreen);
         print("User signed up and data saved: ${user?.uid}");
       } else {
@@ -185,6 +189,15 @@ class UserRegistrationController extends GetxController {
         // setState(() {
         // if (userModel.isParentUser) {
         number = (snapshot.value! as Map)['phone_number'];
+        await SharedPreferenceHelper()
+            .writeData(SharedPreferencesKeys.phoneNumber, number ?? "");
+        await SharedPreferenceHelper().writeData(
+            SharedPreferencesKeys.name, (snapshot.value! as Map)['name'] ?? "");
+        await SharedPreferenceHelper().writeData(
+            SharedPreferencesKeys.email, (snapshot.value! as Map)['email']);
+        await SharedPreferenceHelper().writeData(
+            SharedPreferencesKeys.dob, (snapshot.value! as Map)['dob'] ?? "");
+
         // [userModel.uuid]['balance'];
         // } else {
         //   creditsAvailable = (snapshot?.value! as Map)['balance'];

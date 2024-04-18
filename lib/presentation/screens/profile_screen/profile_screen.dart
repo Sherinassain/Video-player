@@ -1,20 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:my_app/core/utiles/shared_pref_helper.dart';
+import 'package:my_app/core/utiles/shared_pref_key.dart';
+import 'package:my_app/presentation/screens/login_screen/view/login_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
+  const ProfileScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile'),
       ),
-      body: ProfileBody(),
+      body: const ProfileBody(),
     );
   }
 }
 
 class ProfileBody extends StatelessWidget {
+  const ProfileBody({super.key});
+
   @override
   Widget build(BuildContext context) {
+    final email =
+        SharedPreferenceHelper().readData(SharedPreferencesKeys.email);
+    final dob = SharedPreferenceHelper().readData(SharedPreferencesKeys.dob);
+    final name = SharedPreferenceHelper().readData(SharedPreferencesKeys.name);
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Column(
@@ -26,14 +37,15 @@ class ProfileBody extends StatelessWidget {
             backgroundImage: AssetImage('assets/images/img_profile.png'),
           ),
           const SizedBox(height: 20),
-          const ProfileInfo(
-              name: 'John Doe',
-              email: 'john.doe@example.com',
-              dob: 'January 1, 1990'),
+          ProfileInfo(name: name, email: email, dob: dob),
           const SizedBox(height: 20),
           ElevatedButton(
-            onPressed: () {
-              // Add signout functionality here
+            onPressed: () async {
+              await SharedPreferenceHelper().clearAll();
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LoginScreen()),
+                  (route) => false);
             },
             child: const Text('Sign Out'),
           ),
@@ -49,11 +61,11 @@ class ProfileInfo extends StatelessWidget {
   final String dob;
 
   const ProfileInfo({
-    Key? key,
+    super.key,
     required this.name,
     required this.email,
     required this.dob,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

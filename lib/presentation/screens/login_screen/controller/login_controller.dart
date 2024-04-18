@@ -5,7 +5,9 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:my_app/core/utiles/app_utils.dart';
+import 'package:my_app/core/utiles/shared_pref_helper.dart';
 
+import '../../../../core/utiles/shared_pref_key.dart';
 import '../../../../routes/index.dart';
 
 class LoginController extends GetxController {
@@ -90,7 +92,7 @@ class LoginController extends GetxController {
     );
   }
 
-  Future<void> signInWithPhoneNumber() async {
+   Future<void> signInWithPhoneNumber() async {
     try {
       final AuthCredential credential = PhoneAuthProvider.credential(
         verificationId: _verificationId!,
@@ -128,6 +130,14 @@ class LoginController extends GetxController {
         // setState(() {
         //   if (userModel.isParentUser) {
         number = (snapshot.value! as Map)['phone_number'];
+      await  SharedPreferenceHelper()
+            .writeData(SharedPreferencesKeys.phoneNumber, number ?? "");
+       await SharedPreferenceHelper().writeData(
+            SharedPreferencesKeys.name, (snapshot.value! as Map)['name'] ?? "");
+       await SharedPreferenceHelper().writeData(
+            SharedPreferencesKeys.email, (snapshot.value! as Map)['email']);
+       await SharedPreferenceHelper().writeData(
+            SharedPreferencesKeys.dob, (snapshot.value! as Map)['dob'] ?? "");
         // [userModel.uuid]['balance'];
         // } else {
         //   creditsAvailable = (snapshot?.value! as Map)['balance'];
