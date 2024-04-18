@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -28,15 +25,9 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -50,19 +41,47 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCukiuo-42pQ1M6nv3jkp6Lr1GLcMH7490',
-    appId: '1:385067701914:android:ab0112f1137f6fa9b67123',
-    messagingSenderId: '385067701914',
-    projectId: 'video-test-2ae07',
-    storageBucket: 'video-test-2ae07.appspot.com',
+    apiKey: 'AIzaSyB5UPPiNoPt6LFL0y-6yY03M_LpWxSGu_g',
+    appId: '1:30248763369:android:c0c74e53935450576ad578',
+    messagingSenderId: '30248763369',
+    projectId: 'lilacmtestnew',
+    storageBucket: 'lilacmtestnew.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyD47uhVFGE-VJU8WEChmXmfESZIT7KghY8',
-    appId: '1:385067701914:ios:0a5b6d757aedbc10b67123',
-    messagingSenderId: '385067701914',
-    projectId: 'video-test-2ae07',
-    storageBucket: 'video-test-2ae07.appspot.com',
+    apiKey: 'AIzaSyDMcSX8XpwFMMUiRQw67FwnJ1GDBCzbGMY',
+    appId: '1:30248763369:ios:e060c112b1fc5dd76ad578',
+    messagingSenderId: '30248763369',
+    projectId: 'lilacmtestnew',
+    storageBucket: 'lilacmtestnew.appspot.com',
     iosBundleId: 'com.example.myApp',
   );
+
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyBPZKQvBaDvlC6WzGEnhE2L6eKIRRlQ-9k',
+    appId: '1:30248763369:web:cd6a082a8af7dda56ad578',
+    messagingSenderId: '30248763369',
+    projectId: 'lilacmtestnew',
+    authDomain: 'lilacmtestnew.firebaseapp.com',
+    storageBucket: 'lilacmtestnew.appspot.com',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyDMcSX8XpwFMMUiRQw67FwnJ1GDBCzbGMY',
+    appId: '1:30248763369:ios:e060c112b1fc5dd76ad578',
+    messagingSenderId: '30248763369',
+    projectId: 'lilacmtestnew',
+    storageBucket: 'lilacmtestnew.appspot.com',
+    iosBundleId: 'com.example.myApp',
+  );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyBPZKQvBaDvlC6WzGEnhE2L6eKIRRlQ-9k',
+    appId: '1:30248763369:web:744da56e837620766ad578',
+    messagingSenderId: '30248763369',
+    projectId: 'lilacmtestnew',
+    authDomain: 'lilacmtestnew.firebaseapp.com',
+    storageBucket: 'lilacmtestnew.appspot.com',
+  );
+
 }

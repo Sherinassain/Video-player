@@ -1,25 +1,29 @@
 {
-    "project_info": {
-        "project_number": "385067701914",
-        "project_id": "video-test-2ae07",
-        "storage_bucket": "video-test-2ae07.appspot.com"
-    },
-    "client": [{
-        "client_info": {
-            "mobilesdk_app_id": "1:385067701914:android:ab0112f1137f6fa9b67123",
-            "android_client_info": {
-                "package_name": "com.example.videoPlayer"
-            }
-        },
-        "oauth_client": [],
-        "api_key": [{
-            "current_key": "AIzaSyCukiuo-42pQ1M6nv3jkp6Lr1GLcMH7490"
-        }],
-        "services": {
-            "appinvite_service": {
-                "other_platform_oauth_client": []
-            }
+  "project_info": {
+    "project_number": "30248763369",
+    "project_id": "lilacmtestnew",
+    "storage_bucket": "lilacmtestnew.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:30248763369:android:c0c74e53935450576ad578",
+        "android_client_info": {
+          "package_name": "com.example.videoPlayer"
         }
-    }],
-    "configuration_version": "1"
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB5UPPiNoPt6LFL0y-6yY03M_LpWxSGu_g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
 }
