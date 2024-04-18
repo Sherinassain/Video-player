@@ -1,13 +1,14 @@
 {
   "project_info": {
-    "project_number": "30248763369",
-    "project_id": "lilacmtestnew",
-    "storage_bucket": "lilacmtestnew.appspot.com"
+    "project_number": "875747812733",
+    "firebase_url": "https://lilacmtest-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "lilacmtest",
+    "storage_bucket": "lilacmtest.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:30248763369:android:c0c74e53935450576ad578",
+        "mobilesdk_app_id": "1:875747812733:android:5b7c97aa6db97cadb8d814",
         "android_client_info": {
           "package_name": "com.example.videoPlayer"
         }
@@ -15,7 +16,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyB5UPPiNoPt6LFL0y-6yY03M_LpWxSGu_g"
+          "current_key": "AIzaSyAZgDE-Yrns1wc_7UFvwRfOG_pyXmnyPkA"
         }
       ],
       "services": {
