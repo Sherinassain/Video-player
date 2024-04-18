@@ -36,9 +36,10 @@ class _LoginScreenState extends State<LoginScreen> {
     }
     return null;
   }
+
   @override
   void initState() {
-loginCtrl.otpSend.value = false;
+    loginCtrl.otpSend.value = false;
     super.initState();
   }
 
@@ -110,6 +111,9 @@ loginCtrl.otpSend.value = false;
                               formKey: loginCtrl.phoneFormKey,
                               controller: loginCtrl.phoneController,
                               hintText: 'Phone Number',
+                              onChange: () {
+                                loginCtrl.otpSend.value = false;
+                              },
                               validator: (value) => validatePhoneNumber(value)),
                           SizedBox(
                             height: AppScreenUtil().screenHeight(30),
@@ -139,24 +143,24 @@ loginCtrl.otpSend.value = false;
                                   )
                                 : const SizedBox(),
                           ),
-                          Obx(
-                            () => (loginCtrl.isLoading.value == true)
-                                ? CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    color: ColorConst.green3D,
-                                  )
-                                : (loginCtrl.otpSend.value == false)?CommonButton(
-                                    color: ColorConst.green3D,
-                                    title: "Send OTP",
-                                    fontSize: FontSizes.f15,
-                                    onPresss: () {
-                                      if (loginCtrl.phoneFormKey.currentState!
-                                          .validate()) {
-                                        loginCtrl.login();
-                                      }
-                                    },
-                                  ):const SizedBox()
-                          ),
+                          Obx(() => (loginCtrl.isLoading.value == true)
+                              ? CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: ColorConst.green3D,
+                                )
+                              : (loginCtrl.otpSend.value == false)
+                                  ? CommonButton(
+                                      color: ColorConst.green3D,
+                                      title: "Send OTP",
+                                      fontSize: FontSizes.f15,
+                                      onPresss: () {
+                                        if (loginCtrl.phoneFormKey.currentState!
+                                            .validate()) {
+                                          loginCtrl.login();
+                                        }
+                                      },
+                                    )
+                                  : const SizedBox()),
                           SizedBox(
                             height: AppScreenUtil().screenHeight(180),
                           ),
