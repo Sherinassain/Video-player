@@ -39,9 +39,8 @@ class UserRegistrationController extends GetxController {
       AppUtils.oneTimeSnackBar("An error occurred. Please try again later.",
           bgColor: Colors.red, time: 3);
       print('Error signing in: $error');
-            isLoading.value = false;
-
-    } 
+      isLoading.value = false;
+    }
   }
 
   Future<void> getPhoneNumber(String uid) async {
@@ -93,16 +92,14 @@ class UserRegistrationController extends GetxController {
           return;
         }
         otpSend.value = true;
-              isLoading.value = false;
-
+        isLoading.value = false;
       },
       verificationFailed: (FirebaseAuthException e) {
         print(e.message);
         print(e.code);
         AppUtils.oneTimeSnackBar(e.message ?? "Unknown error occurred",
             bgColor: Colors.red, time: 3);
-                  isLoading.value = false;
-
+        isLoading.value = false;
       },
       codeSent: (String verificationId, int? resendToken) {
         _verificationId = verificationId;
@@ -119,13 +116,11 @@ class UserRegistrationController extends GetxController {
                     phone: phoneController.text.trim(),
                   )),
         );
-              isLoading.value = false;
-
+        isLoading.value = false;
       },
       codeAutoRetrievalTimeout: (String verificationId) {
         _verificationId = verificationId;
-              isLoading.value = false;
-
+        isLoading.value = false;
       },
     );
   }
@@ -144,6 +139,14 @@ class UserRegistrationController extends GetxController {
       if (number != phone) {
         databaseRef.child("users/${user?.uid}").set(
             {'name': name, 'email': email, 'phone_number': phone, 'dob': dob});
+        await SharedPreferenceHelper()
+            .writeData(SharedPreferencesKeys.phoneNumber, number ?? "");
+        await SharedPreferenceHelper()
+            .writeData(SharedPreferencesKeys.name, name ?? "");
+        await SharedPreferenceHelper()
+            .writeData(SharedPreferencesKeys.email, email ?? "");
+        await SharedPreferenceHelper()
+            .writeData(SharedPreferencesKeys.dob, dob ?? "");
         SharedPreferenceHelper()
             .writeBoolData(SharedPreferencesKeys.isLoggedIn, true);
         Get.offNamed(routeName.homeScreen);
@@ -189,14 +192,6 @@ class UserRegistrationController extends GetxController {
         // setState(() {
         // if (userModel.isParentUser) {
         number = (snapshot.value! as Map)['phone_number'];
-        await SharedPreferenceHelper()
-            .writeData(SharedPreferencesKeys.phoneNumber, number ?? "");
-        await SharedPreferenceHelper().writeData(
-            SharedPreferencesKeys.name, (snapshot.value! as Map)['name'] ?? "");
-        await SharedPreferenceHelper().writeData(
-            SharedPreferencesKeys.email, (snapshot.value! as Map)['email']);
-        await SharedPreferenceHelper().writeData(
-            SharedPreferencesKeys.dob, (snapshot.value! as Map)['dob'] ?? "");
 
         // [userModel.uuid]['balance'];
         // } else {
