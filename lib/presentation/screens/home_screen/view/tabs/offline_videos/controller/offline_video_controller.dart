@@ -11,7 +11,7 @@ var videoPath=''.obs;
 Future<void> getDownloadedVideos() async {
   isLoading.value= true;
   try {
-    final directory = Directory('/storage/emulated/0/Android/data/com.example.my_app/files/MyVideoPlayer');
+    final directory = Directory('/storage/emulated/0/Android/data/com.example.videoPlayer/files/MyVideoPlayer/');
 
     if (directory.existsSync()) {
       // List files in the directory

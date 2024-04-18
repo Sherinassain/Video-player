@@ -57,9 +57,13 @@ dependencies:
   hive: ^2.2.3
   flutter:
     sdk: flutter
- 
-  flutter_file_downloader: ^1.2.1
-  firebase_database: ^10.5.2
+  cloud_firestore: ^4.16.1
+  googleapis: ^13.1.0
+  googleapis_auth: ^1.6.0
+  cached_network_image: ^3.3.1
+  sqflite: ^2.3.3
+  image_loading_animation: ^0.0.1
+  youtube_player_flutter: ^9.0.1
 
 
 

@@ -15,6 +15,7 @@ void main() async {
   );
   await Hive.initFlutter();
   await SharedPreferenceHelper().getInit();
+  
   runApp(const MyApp());
 }
 
