@@ -111,8 +111,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               formKey: loginCtrl.phoneFormKey,
                               controller: loginCtrl.phoneController,
                               hintText: 'Phone Number',
-                              onChange: () {
+                              onChange: (value){
                                 loginCtrl.otpSend.value = false;
+
                               },
                               validator: (value) => validatePhoneNumber(value)),
                           SizedBox(

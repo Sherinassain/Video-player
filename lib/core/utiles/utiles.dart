@@ -49,7 +49,7 @@ class TextFormFieldCom extends StatelessWidget {
   var obscure;
   var prefix;
   var keyBoardType;
-  var onChange;
+  Function(String)? onChange;
   var suffix;
   bool readOnly;
   dynamic validator;

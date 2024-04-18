@@ -82,7 +82,13 @@ class LoginController extends GetxController {
       },
       codeAutoRetrievalTimeout: (String verificationId) {
         _verificationId = verificationId;
-        isLoading.value = false;
+        AppUtils.oneTimeSnackBar(
+          "Session Expired ! , Please try again",
+          bgColor: Colors.red,
+          time: 3);
+              isLoading.value = false;
+
+
       },
     );
   }
