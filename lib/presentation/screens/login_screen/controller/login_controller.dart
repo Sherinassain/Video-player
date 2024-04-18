@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:my_app/core/utiles/app_utils.dart';
@@ -17,6 +18,8 @@ class LoginController extends GetxController {
   RxBool otpSend = false.obs;
   RxBool isLoading = false.obs;
   String? _verificationId;
+  String? number;
+  final databaseRef = FirebaseDatabase.instance.ref();
 
   Future<void> login() async {
     isLoading.value = true;
@@ -33,18 +36,32 @@ class LoginController extends GetxController {
 
   Future<void> _verifyPhoneNumber() async {
     String phoneNumber = '+91${emailController.text.trim()}';
+
     if (phoneNumber.isEmpty || phoneNumber.length != 13) {
-      // Validate phone number length assuming '+91' is included
       AppUtils.oneTimeSnackBar("The provided phone number is not valid.",
           bgColor: Colors.red, time: 3);
       return;
     }
+
+    // Check if the phone number is already in the database
+    // final DatabaseReference dbRef = FirebaseDatabase.instance.ref('users');
+    // final query = dbRef.orderByChild('phone_number').equalTo(phoneNumber);
+    // final dataSnapshot = await query.once();
+
+    // if (dataSnapshot.snapshot.value != null) {
+    //   // If data exists, phone number is already used
+    //   AppUtils.oneTimeSnackBar("Phone number is already registered.",
+    //       bgColor: Colors.red, time: 3);
+    //   return;
+    // }
+
+    // Proceed with Firebase phone number verification if phone number is not registered
     await FirebaseAuth.instance.verifyPhoneNumber(
       phoneNumber: phoneNumber,
       verificationCompleted: (PhoneAuthCredential credential) async {
         await FirebaseAuth.instance.signInWithCredential(credential);
-        otpSend.value =
-            true; // Move inside completion to ensure it's only set on success
+
+        otpSend.value = true;
       },
       verificationFailed: (FirebaseAuthException e) {
         log(e.toString());
@@ -64,7 +81,7 @@ class LoginController extends GetxController {
     );
   }
 
-  void signInWithPhoneNumber() async {
+  Future<void> signInWithPhoneNumber() async {
     try {
       final AuthCredential credential = PhoneAuthProvider.credential(
         verificationId: _verificationId!,
@@ -72,16 +89,43 @@ class LoginController extends GetxController {
       );
       final User? user =
           (await FirebaseAuth.instance.signInWithCredential(credential)).user;
-      if (user != null) {
-        print("Successfully signed in UID: ${user.uid}");
-        Get.offNamed(routeName.homeScreen);
-      } else {
-        throw Exception('No user found');
-      }
+      await getPhoneNumber(user?.uid ?? "").then((value) {
+        if (number == emailController.text.trim()) {
+          Get.offNamed(routeName.homeScreen);
+        } else {
+          otpSend.value = false;
+          AppUtils.oneTimeSnackBar("User not found, please register",
+              bgColor: Colors.red, time: 3);
+        }
+      });
     } catch (e) {
       print("Failed to sign in: $e");
       AppUtils.oneTimeSnackBar("Failed to sign in: ${e.toString()}",
           bgColor: Colors.red, time: 3);
+    }
+  }
+
+  //
+  Future<void> getPhoneNumber(String uid) async {
+    // DatabaseReference starCountRef = FirebaseDatabase.instance.ref();
+    DataSnapshot? snapshot;
+    snapshot = await databaseRef.child('users/$uid').get();
+    // } else {
+    // snapshot = await starCountRef.child('data/${userModel.parentUuid}').get();
+    // }
+    // final snapshot = await starCountRef.child('data/${userModel.uuid}').get();
+    if (snapshot.exists) {
+      if ((snapshot.value! as Map)['phone_number'] != null) {
+        // setState(() {
+        //   if (userModel.isParentUser) {
+        number = (snapshot.value! as Map)['phone_number'];
+        // [userModel.uuid]['balance'];
+        // } else {
+        //   creditsAvailable = (snapshot?.value! as Map)['balance'];
+      }
+      // // [userModel.parentUuid]['balance'];
+      // }
+      // );
     }
   }
 }

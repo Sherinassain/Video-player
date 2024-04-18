@@ -1,26 +1,19 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_file_downloader/flutter_file_downloader.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:my_app/core/constants/color.dart';
 import 'package:my_app/core/constants/textstyle.dart';
 import 'package:my_app/presentation/screens/home_screen/view/tabs/offline_videos/controller/offline_video_controller.dart';
 import 'package:my_app/presentation/screens/home_screen/view/tabs/video_list_screen/controller/video_list_screen_controller.dart';
 import 'package:my_app/presentation/widgets/common/default_app_bar.dart';
 import 'package:my_app/routes/index.dart';
-import 'package:path/path.dart';
 import 'package:video_player/video_player.dart';
 
-import 'package:fluttertoast/fluttertoast.dart';
-
 class VideoListScreen extends StatefulWidget {
-  const VideoListScreen({Key? key}) : super(key: key);
+  const VideoListScreen({super.key});
 
   @override
   State<VideoListScreen> createState() => _VideoListScreenState();
@@ -119,9 +112,9 @@ class _VideoListScreenState extends State<VideoListScreen> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Text(
-                                      videoListScreenCtrl.controller.value.position
-                                    .toString()
-                                    .split('.')[0],
+                              videoListScreenCtrl.controller.value.position
+                                  .toString()
+                                  .split('.')[0],
                               style: TextStyleClass.poppinsMedium(
                                   size: 13.00, color: ColorConst.white),
                             ),
@@ -131,9 +124,9 @@ class _VideoListScreenState extends State<VideoListScreen> {
                                   size: 13.00, color: ColorConst.black),
                             ),
                             Text(
-                            videoListScreenCtrl.controller.value.duration
-                                    .toString()
-                                    .split('.')[0],
+                              videoListScreenCtrl.controller.value.duration
+                                  .toString()
+                                  .split('.')[0],
                               style: TextStyleClass.poppinsMedium(
                                   size: 13.00, color: ColorConst.white),
                             ),

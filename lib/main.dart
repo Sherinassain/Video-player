@@ -40,8 +40,6 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           locale: const Locale('en', 'US'),
           fallbackLocale: const Locale('en', 'US'),
-          initialRoute: '/',
-          // home: Get.toNamed(routeName.splashScreen),
           getPages: appRoute.getPages),
     );
   }

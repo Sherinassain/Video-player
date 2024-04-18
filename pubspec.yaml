@@ -57,7 +57,9 @@ dependencies:
   hive: ^2.2.3
   flutter:
     sdk: flutter
-  cloud_firestore: ^4.16.1
+ 
+  flutter_file_downloader: ^1.2.1
+  firebase_database: ^10.5.2
 
 
 
