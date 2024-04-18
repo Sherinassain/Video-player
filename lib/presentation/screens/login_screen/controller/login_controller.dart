@@ -32,9 +32,8 @@ class LoginController extends GetxController {
       log('Error signing in: $error');
       AppUtils.oneTimeSnackBar("An error occurred. Please try again later.",
           bgColor: Colors.red, time: 3);
-                isLoading.value = false;
-
-    } 
+      isLoading.value = false;
+    }
   }
 
   Future<void> _verifyPhoneNumber() async {
@@ -65,8 +64,7 @@ class LoginController extends GetxController {
         await FirebaseAuth.instance.signInWithCredential(credential);
 
         otpSend.value = true;
-              isLoading.value = false;
-
+        isLoading.value = false;
       },
       verificationFailed: (FirebaseAuthException e) {
         log(e.toString());
@@ -75,24 +73,21 @@ class LoginController extends GetxController {
           errorMessage = 'The provided phone number is not valid.';
         }
         AppUtils.oneTimeSnackBar(errorMessage, bgColor: Colors.red, time: 3);
-              isLoading.value = false;
-
+        isLoading.value = false;
       },
       codeSent: (String verificationId, int? resendToken) {
         _verificationId = verificationId;
         otpSend.value = true;
-              isLoading.value = false;
-
+        isLoading.value = false;
       },
       codeAutoRetrievalTimeout: (String verificationId) {
         _verificationId = verificationId;
-              isLoading.value = false;
-
+        isLoading.value = false;
       },
     );
   }
 
-   Future<void> signInWithPhoneNumber() async {
+  Future<void> signInWithPhoneNumber() async {
     try {
       final AuthCredential credential = PhoneAuthProvider.credential(
         verificationId: _verificationId!,
@@ -100,8 +95,10 @@ class LoginController extends GetxController {
       );
       final User? user =
           (await FirebaseAuth.instance.signInWithCredential(credential)).user;
-      await getPhoneNumber(user?.uid ?? "").then((value) {
+      await getPhoneNumber(user?.uid ?? "").then((value) async {
         if (number == phoneController.text.trim()) {
+          await SharedPreferenceHelper()
+              .writeBoolData(SharedPreferencesKeys.isLoggedIn, true);
           Get.offNamed(routeName.homeScreen);
         } else {
           otpSend.value = false;
@@ -130,13 +127,13 @@ class LoginController extends GetxController {
         // setState(() {
         //   if (userModel.isParentUser) {
         number = (snapshot.value! as Map)['phone_number'];
-      await  SharedPreferenceHelper()
+        await SharedPreferenceHelper()
             .writeData(SharedPreferencesKeys.phoneNumber, number ?? "");
-       await SharedPreferenceHelper().writeData(
+        await SharedPreferenceHelper().writeData(
             SharedPreferencesKeys.name, (snapshot.value! as Map)['name'] ?? "");
-       await SharedPreferenceHelper().writeData(
+        await SharedPreferenceHelper().writeData(
             SharedPreferencesKeys.email, (snapshot.value! as Map)['email']);
-       await SharedPreferenceHelper().writeData(
+        await SharedPreferenceHelper().writeData(
             SharedPreferencesKeys.dob, (snapshot.value! as Map)['dob'] ?? "");
         // [userModel.uuid]['balance'];
         // } else {
