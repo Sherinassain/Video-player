@@ -50,19 +50,22 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCukiuo-42pQ1M6nv3jkp6Lr1GLcMH7490',
-    appId: '1:385067701914:android:ab0112f1137f6fa9b67123',
-    messagingSenderId: '385067701914',
-    projectId: 'video-test-2ae07',
-    storageBucket: 'video-test-2ae07.appspot.com',
+    apiKey: 'AIzaSyAZgDE-Yrns1wc_7UFvwRfOG_pyXmnyPkA',
+    appId: '1:875747812733:android:5b7c97aa6db97cadb8d814',
+    messagingSenderId: '875747812733',
+    projectId: 'lilacmtest',
+    databaseURL: 'https://lilacmtest-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'lilacmtest.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyD47uhVFGE-VJU8WEChmXmfESZIT7KghY8',
-    appId: '1:385067701914:ios:0a5b6d757aedbc10b67123',
-    messagingSenderId: '385067701914',
-    projectId: 'video-test-2ae07',
-    storageBucket: 'video-test-2ae07.appspot.com',
+    apiKey: 'AIzaSyBvz4-taYXZlKkgiaJZustGV_sUoi8eSQA',
+    appId: '1:875747812733:ios:b5eda4a5c8b8f85bb8d814',
+    messagingSenderId: '875747812733',
+    projectId: 'lilacmtest',
+    databaseURL: 'https://lilacmtest-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'lilacmtest.appspot.com',
     iosBundleId: 'com.example.myApp',
   );
+
 }

@@ -102,17 +102,17 @@ class UserRegistrationController extends GetxController {
         _verificationId = verificationId;
         otpSend.value = true;
         // Get.offNamed(routeName.otpVerifyScreen);
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-                builder: (context) => OtpVerifyScreen(
-                      verificationId: _verificationId!,
-                      dob: dobController.text.trim(),
-                      email: emailController.text.trim(),
-                      name: firstNameController.text.trim(),
-                      phone: phoneController.text.trim(),
-                    )),
-            (route) => false);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => OtpVerifyScreen(
+                    verificationId: _verificationId!,
+                    dob: dobController.text.trim(),
+                    email: emailController.text.trim(),
+                    name: firstNameController.text.trim(),
+                    phone: phoneController.text.trim(),
+                  )),
+        );
       },
       codeAutoRetrievalTimeout: (String verificationId) {
         _verificationId = verificationId;
@@ -131,7 +131,7 @@ class UserRegistrationController extends GetxController {
       final User? user =
           (await FirebaseAuth.instance.signInWithCredential(credential)).user;
       await listenToUsers(user?.uid ?? "");
-      if (number != phoneController.text.trim()) {
+      if (number != phone) {
         databaseRef.child("users/${user?.uid}").set(
             {'name': name, 'email': email, 'phone_number': phone, 'dob': dob});
         Get.offNamed(routeName.homeScreen);
@@ -167,7 +167,7 @@ class UserRegistrationController extends GetxController {
     // );
     //  if (userModel.isParentUser) {
     DataSnapshot? snapshot;
-    snapshot = await databaseRef.child('data/$uid').get();
+    snapshot = await databaseRef.child('users/$uid').get();
     // } else {
     // snapshot = await starCountRef.child('data/${userModel.parentUuid}').get();
     // }
