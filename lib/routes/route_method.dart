@@ -17,17 +17,17 @@ class AppRoute {
   final List<GetPage> getPages = [
 
  GetPage(
-      name: _routeName.splashScreen,
+      name: '/',
       page: () => const SplashScreen(),
     ),        GetPage(
-        name: _routeName.loginScreen, page: () =>  LoginScreen(),
+        name: _routeName.loginScreen, page: () => const LoginScreen(),
         
         ),
           GetPage(
-        name: '/', page: () =>   HomeScreen(),
+        name: _routeName.homeScreen, page: () =>   HomeScreen(),
         ),
            GetPage(
-        name: _routeName.userRegistration, page: () =>   UserRegistration(),
+        name: _routeName.userRegistration, page: () => const   UserRegistration(),
         ),
                    GetPage(
         name: _routeName.networkErrorScreen, page: () => const  NetworkErrorScreen(),

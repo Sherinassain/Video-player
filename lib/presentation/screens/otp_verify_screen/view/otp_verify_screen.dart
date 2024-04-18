@@ -77,6 +77,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
         foregroundColor: ColorConst.black1F,
         elevation: 0,
         backgroundColor: ColorConst.white,
+        leading: const BackButton(),
         centerTitle: true,
         title: Text(
           "Verification",
@@ -114,11 +115,13 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                     controller: verifyOtpScreenCtrl.otpController,
                     onCompleted: (value) async =>
                         await verifyOtpScreenCtrl.confirmCodeAndRegister(
-                            widget.verificationId,
-                            widget.phone,
-                            widget.email,
-                            widget.name,
-                            widget.dob),
+                      widget.verificationId,
+                      widget.phone,
+                      widget.email,
+                      widget.name,
+                      widget.dob,
+                      context: context,
+                    ),
                     validator: (value) {
                       if (value == null || value.length != 6) {
                         setState(() {
