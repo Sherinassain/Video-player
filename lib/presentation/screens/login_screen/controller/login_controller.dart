@@ -11,11 +11,12 @@ import '../../../../core/utiles/shared_pref_key.dart';
 import '../../../../routes/index.dart';
 
 class LoginController extends GetxController {
-  TextEditingController emailController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController otpController = TextEditingController();
   // final GlobalKey<FormState> emailFormKey = GlobalKey<FormState>();
   final GlobalKey<FormState> passwordFormKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> phoneFormKey = GlobalKey<FormState>();
 
   RxBool otpSend = false.obs;
   RxBool isLoading = false.obs;
@@ -31,13 +32,13 @@ class LoginController extends GetxController {
       log('Error signing in: $error');
       AppUtils.oneTimeSnackBar("An error occurred. Please try again later.",
           bgColor: Colors.red, time: 3);
-    } finally {
-      isLoading.value = false;
-    }
+                isLoading.value = false;
+
+    } 
   }
 
   Future<void> _verifyPhoneNumber() async {
-    String phoneNumber = '+91${emailController.text.trim()}';
+    String phoneNumber = '+91${phoneController.text.trim()}';
 
     if (phoneNumber.isEmpty || phoneNumber.length != 13) {
       AppUtils.oneTimeSnackBar("The provided phone number is not valid.",
@@ -64,6 +65,8 @@ class LoginController extends GetxController {
         await FirebaseAuth.instance.signInWithCredential(credential);
 
         otpSend.value = true;
+              isLoading.value = false;
+
       },
       verificationFailed: (FirebaseAuthException e) {
         log(e.toString());
@@ -72,18 +75,24 @@ class LoginController extends GetxController {
           errorMessage = 'The provided phone number is not valid.';
         }
         AppUtils.oneTimeSnackBar(errorMessage, bgColor: Colors.red, time: 3);
+              isLoading.value = false;
+
       },
       codeSent: (String verificationId, int? resendToken) {
         _verificationId = verificationId;
         otpSend.value = true;
+              isLoading.value = false;
+
       },
       codeAutoRetrievalTimeout: (String verificationId) {
         _verificationId = verificationId;
+              isLoading.value = false;
+
       },
     );
   }
 
-  Future<void> signInWithPhoneNumber() async {
+   Future<void> signInWithPhoneNumber() async {
     try {
       final AuthCredential credential = PhoneAuthProvider.credential(
         verificationId: _verificationId!,
@@ -92,9 +101,7 @@ class LoginController extends GetxController {
       final User? user =
           (await FirebaseAuth.instance.signInWithCredential(credential)).user;
       await getPhoneNumber(user?.uid ?? "").then((value) {
-        if (number == emailController.text.trim()) {
-          SharedPreferenceHelper()
-              .writeBoolData(SharedPreferencesKeys.isLoggedIn, true);
+        if (number == phoneController.text.trim()) {
           Get.offNamed(routeName.homeScreen);
         } else {
           otpSend.value = false;

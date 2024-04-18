@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:my_app/core/constants/color.dart';
 import 'package:my_app/core/constants/textstyle.dart';
+import 'package:my_app/core/utiles/app_utils.dart';
 import 'package:my_app/presentation/screens/user_registration_screen/view/controller/user_registration_controller.dart';
 import 'package:pinput/pinput.dart';
 
@@ -113,15 +114,19 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                   child: Pinput(
                     length: 6,
                     controller: verifyOtpScreenCtrl.otpController,
-                    onCompleted: (value) async =>
-                        await verifyOtpScreenCtrl.confirmCodeAndRegister(
+                    onCompleted: (value) async{
+                        AppUtils.oneTimeSnackBar(
+          "Please wait Few moments",
+          bgColor: Colors.green,
+          time: 3);
+                      return  await verifyOtpScreenCtrl.confirmCodeAndRegister(
                       widget.verificationId,
                       widget.phone,
                       widget.email,
                       widget.name,
                       widget.dob,
                       context: context,
-                    ),
+                    );},
                     validator: (value) {
                       if (value == null || value.length != 6) {
                         setState(() {

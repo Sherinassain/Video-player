@@ -6,6 +6,7 @@ import 'package:my_app/core/common/scale.dart';
 import 'package:my_app/core/constants/color.dart';
 import 'package:my_app/core/constants/textstyle.dart';
 import 'package:my_app/core/utiles/app_screen_util.dart';
+import 'package:my_app/core/utiles/app_utils.dart';
 import 'package:my_app/core/utiles/utiles.dart';
 import 'package:my_app/presentation/screens/login_screen/controller/login_controller.dart';
 import 'package:my_app/routes/index.dart';
@@ -35,6 +36,11 @@ class _LoginScreenState extends State<LoginScreen> {
     }
     return null;
   }
+  @override
+  void initState() {
+loginCtrl.otpSend.value = false;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
         ///Exit the app
         FlutterExitApp.exitApp();
-        return true; // Return true to allow the app to exit
+        return true;
       },
       child: SafeArea(
           child: Scaffold(
@@ -101,8 +107,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           TextFormFieldCom(
                               prefix: const Icon(Icons.phone_android_outlined),
-                              // formKey: loginCtrl.emailFormKey,
-                              controller: loginCtrl.emailController,
+                              formKey: loginCtrl.phoneFormKey,
+                              controller: loginCtrl.phoneController,
                               hintText: 'Phone Number',
                               validator: (value) => validatePhoneNumber(value)),
                           SizedBox(
@@ -118,6 +124,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                         pinputAutovalidateMode:
                                             PinputAutovalidateMode.onSubmit,
                                         onCompleted: (value) {
+                                          AppUtils.oneTimeSnackBar(
+                                              "Please wait Few moments",
+                                              bgColor: Colors.green,
+                                              time: 3);
                                           loginCtrl.signInWithPhoneNumber();
                                         },
                                       ),
@@ -135,14 +145,17 @@ class _LoginScreenState extends State<LoginScreen> {
                                     strokeWidth: 2,
                                     color: ColorConst.green3D,
                                   )
-                                : CommonButton(
+                                : (loginCtrl.otpSend.value == false)?CommonButton(
                                     color: ColorConst.green3D,
                                     title: "Send OTP",
                                     fontSize: FontSizes.f15,
                                     onPresss: () {
-                                      loginCtrl.login();
+                                      if (loginCtrl.phoneFormKey.currentState!
+                                          .validate()) {
+                                        loginCtrl.login();
+                                      }
                                     },
-                                  ),
+                                  ):const SizedBox()
                           ),
                           SizedBox(
                             height: AppScreenUtil().screenHeight(180),

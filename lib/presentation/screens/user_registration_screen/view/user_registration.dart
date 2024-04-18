@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_exit_app/flutter_exit_app.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:my_app/core/common/scale.dart';
@@ -56,6 +58,8 @@ class _UserRegistrationState extends State<UserRegistration> {
       // userRegCtrl.listenToUsers();
     });
   }
+    DateTime? lastPressed;
+
 
   @override
   Widget build(BuildContext context) {
@@ -105,6 +109,7 @@ class _UserRegistrationState extends State<UserRegistration> {
                           height: AppScreenUtil().screenHeight(40),
                         ),
                         TextFormFieldCom(
+                          formKey: userRegCtrl.firstNameFormkey,
                           controller: userRegCtrl.firstNameController,
                           prefix: const Icon(Icons.person),
                           hintText: 'First name',
@@ -122,7 +127,7 @@ class _UserRegistrationState extends State<UserRegistration> {
                           onTap: () => _selectDate(context),
                           child: AbsorbPointer(
                             child: TextFormFieldCom(
-                              // formKey: userRegCtrl.dobFormKey,
+                              formKey: userRegCtrl.dobFormKey,
                               controller: userRegCtrl.dobController,
                               prefix: const Icon(Icons.calendar_month),
                               hintText: 'Dob',
@@ -139,7 +144,7 @@ class _UserRegistrationState extends State<UserRegistration> {
                           height: AppScreenUtil().screenHeight(20),
                         ),
                         TextFormFieldCom(
-                          // formKey: userRegCtrl.emailFormKey,
+                          formKey: userRegCtrl.emailFormKey,
                           controller: userRegCtrl.emailController,
                           prefix: const Icon(Icons.email),
                           hintText: 'Email',
@@ -147,15 +152,15 @@ class _UserRegistrationState extends State<UserRegistration> {
                             if (value == null || value.isEmpty) {
                               return "Please enter an email address";
                             }
-
+    
                             // Define a regular expression for email validation
                             final emailRegex = RegExp(
                                 r"^[a-zA-Z0-9.a-zA-Z0-9!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
-
+    
                             if (!emailRegex.hasMatch(value)) {
                               return "Please enter a valid email address";
                             }
-
+    
                             return null;
                           },
                         ),
@@ -164,22 +169,36 @@ class _UserRegistrationState extends State<UserRegistration> {
                         ),
                         TextFormFieldCom(
                             prefix: const Icon(Icons.phone_android_outlined),
-                            // formKey: userRegCtrl.phoneFormKey,
+                            formKey: userRegCtrl.phoneFormKey,
                             controller: userRegCtrl.phoneController,
                             hintText: 'Phone Number',
                             validator: (value) => validatePhoneNumber(value)),
                         SizedBox(
                           height: AppScreenUtil().screenHeight(30),
                         ),
-                      Obx(() =>   (userRegCtrl.isLoading.value == true)?CircularProgressIndicator(strokeWidth: 2,color: ColorConst.green3D):
-                        CommonButton(
-                          color: ColorConst.green3D,
-                          title: "Send otp",
-                          fontSize: FontSizes.f15,
-                          onPresss: () {
-                            userRegCtrl.sendOtp(context);
-                          },
-                        ),)
+                        Obx(
+                          () => (userRegCtrl.isLoading.value == true)
+                              ? CircularProgressIndicator(
+                                  strokeWidth: 2, color: ColorConst.green3D)
+                              : CommonButton(
+                                  color: ColorConst.green3D,
+                                  title: "Send otp",
+                                  fontSize: FontSizes.f15,
+                                  onPresss: () {
+                                    if (userRegCtrl
+                                            .firstNameFormkey.currentState!
+                                            .validate() &&
+                                        userRegCtrl.dobFormKey.currentState!
+                                            .validate() &&
+                                        userRegCtrl.emailFormKey.currentState!
+                                            .validate() &&
+                                        userRegCtrl.phoneFormKey.currentState!
+                                            .validate()) {
+                                      userRegCtrl.sendOtp(context);
+                                    }
+                                  },
+                                ),
+                        )
                         // ),
                       ],
                     ),
