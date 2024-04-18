@@ -108,7 +108,7 @@ loginCtrl.otpSend.value = false;
                           TextFormFieldCom(
                               prefix: const Icon(Icons.phone_android_outlined),
                               formKey: loginCtrl.phoneFormKey,
-                              controller: loginCtrl.emailController,
+                              controller: loginCtrl.phoneController,
                               hintText: 'Phone Number',
                               validator: (value) => validatePhoneNumber(value)),
                           SizedBox(

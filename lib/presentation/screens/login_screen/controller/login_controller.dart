@@ -9,7 +9,7 @@ import 'package:my_app/core/utiles/app_utils.dart';
 import '../../../../routes/index.dart';
 
 class LoginController extends GetxController {
-  TextEditingController emailController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController otpController = TextEditingController();
   // final GlobalKey<FormState> emailFormKey = GlobalKey<FormState>();
@@ -36,7 +36,7 @@ class LoginController extends GetxController {
   }
 
   Future<void> _verifyPhoneNumber() async {
-    String phoneNumber = '+91${emailController.text.trim()}';
+    String phoneNumber = '+91${phoneController.text.trim()}';
 
     if (phoneNumber.isEmpty || phoneNumber.length != 13) {
       AppUtils.oneTimeSnackBar("The provided phone number is not valid.",
@@ -99,7 +99,7 @@ class LoginController extends GetxController {
       final User? user =
           (await FirebaseAuth.instance.signInWithCredential(credential)).user;
       await getPhoneNumber(user?.uid ?? "").then((value) {
-        if (number == emailController.text.trim()) {
+        if (number == phoneController.text.trim()) {
           Get.offNamed(routeName.homeScreen);
         } else {
           otpSend.value = false;
