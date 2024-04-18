@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_exit_app/flutter_exit_app.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:my_app/core/constants/color.dart';
@@ -26,30 +28,51 @@ class _HomeScreenState extends State<HomeScreen> {
       _selectedIndex = index;
     });
   }
+    DateTime? lastPressed;
+
 
   @override
   Widget build(BuildContext context) {
-    return Obx(()=>
- Scaffold(
-                      backgroundColor: (homeCtrl.isDarkTheme.value == false)?ColorConst.white:ColorConst.black,
-      
-        body: Center(
-          child: _widgetOptions.elementAt(_selectedIndex),
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          items:const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.video_library),
-              label: 'Videos List',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.download_rounded),
-              label: 'Offline Videos',
-            ),
-          ],
-          currentIndex: _selectedIndex,
-          selectedItemColor: Colors.blue,
-          onTap: _onItemTapped,
+    return WillPopScope(
+            onWillPop: () async {
+        DateTime now = DateTime.now();
+        if (lastPressed == null ||
+            now.difference(lastPressed!) > const Duration(seconds: 2)) {
+          lastPressed = now;
+          Fluttertoast.showToast(
+            msg: "Press back again to exit",
+            backgroundColor: Colors.black,
+            textColor: Colors.white,
+          );
+          return false;
+        }
+
+        ///Exit the app
+        FlutterExitApp.exitApp();
+        return true; 
+      },
+      child: Obx(()=>
+       Scaffold(
+                        backgroundColor: (homeCtrl.isDarkTheme.value == false)?ColorConst.white:ColorConst.black,
+        
+          body: Center(
+            child: _widgetOptions.elementAt(_selectedIndex),
+          ),
+          bottomNavigationBar: BottomNavigationBar(
+            items:const <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: Icon(Icons.video_library),
+                label: 'Videos List',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.download_rounded),
+                label: 'Offline Videos',
+              ),
+            ],
+            currentIndex: _selectedIndex,
+            selectedItemColor: Colors.blue,
+            onTap: _onItemTapped,
+          ),
         ),
       ),
     );

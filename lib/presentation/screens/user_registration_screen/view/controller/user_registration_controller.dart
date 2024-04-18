@@ -14,10 +14,10 @@ class UserRegistrationController extends GetxController {
   TextEditingController phoneController = TextEditingController();
   TextEditingController otpController = TextEditingController();
 
-  // final GlobalKey<FormState> emailFormKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> emailFormKey = GlobalKey<FormState>();
   final GlobalKey<FormState> firstNameFormkey = GlobalKey<FormState>();
-  // final GlobalKey<FormState> dobFormKey = GlobalKey<FormState>();
-  // final GlobalKey<FormState> phoneFormKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> dobFormKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> phoneFormKey = GlobalKey<FormState>();
   final databaseRef = FirebaseDatabase.instance.ref();
 
   RxBool isLoading = false.obs;
@@ -37,9 +37,9 @@ class UserRegistrationController extends GetxController {
       AppUtils.oneTimeSnackBar("An error occurred. Please try again later.",
           bgColor: Colors.red, time: 3);
       print('Error signing in: $error');
-    } finally {
-      isLoading.value = false;
-    }
+            isLoading.value = false;
+
+    } 
   }
 
   Future<void> getPhoneNumber(String uid) async {
@@ -91,12 +91,16 @@ class UserRegistrationController extends GetxController {
           return;
         }
         otpSend.value = true;
+              isLoading.value = false;
+
       },
       verificationFailed: (FirebaseAuthException e) {
         print(e.message);
         print(e.code);
         AppUtils.oneTimeSnackBar(e.message ?? "Unknown error occurred",
             bgColor: Colors.red, time: 3);
+                  isLoading.value = false;
+
       },
       codeSent: (String verificationId, int? resendToken) {
         _verificationId = verificationId;
@@ -113,9 +117,13 @@ class UserRegistrationController extends GetxController {
                     phone: phoneController.text.trim(),
                   )),
         );
+              isLoading.value = false;
+
       },
       codeAutoRetrievalTimeout: (String verificationId) {
         _verificationId = verificationId;
+              isLoading.value = false;
+
       },
     );
   }

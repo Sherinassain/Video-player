@@ -64,6 +64,7 @@ dependencies:
   sqflite: ^2.3.3
   image_loading_animation: ^0.0.1
   youtube_player_flutter: ^9.0.1
+  firebase_database: ^10.5.2
 
 
 

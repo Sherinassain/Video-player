@@ -14,6 +14,7 @@ class LoginController extends GetxController {
   TextEditingController otpController = TextEditingController();
   // final GlobalKey<FormState> emailFormKey = GlobalKey<FormState>();
   final GlobalKey<FormState> passwordFormKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> phoneFormKey = GlobalKey<FormState>();
 
   RxBool otpSend = false.obs;
   RxBool isLoading = false.obs;
@@ -29,9 +30,9 @@ class LoginController extends GetxController {
       log('Error signing in: $error');
       AppUtils.oneTimeSnackBar("An error occurred. Please try again later.",
           bgColor: Colors.red, time: 3);
-    } finally {
-      isLoading.value = false;
-    }
+                isLoading.value = false;
+
+    } 
   }
 
   Future<void> _verifyPhoneNumber() async {
@@ -62,6 +63,8 @@ class LoginController extends GetxController {
         await FirebaseAuth.instance.signInWithCredential(credential);
 
         otpSend.value = true;
+              isLoading.value = false;
+
       },
       verificationFailed: (FirebaseAuthException e) {
         log(e.toString());
@@ -70,13 +73,19 @@ class LoginController extends GetxController {
           errorMessage = 'The provided phone number is not valid.';
         }
         AppUtils.oneTimeSnackBar(errorMessage, bgColor: Colors.red, time: 3);
+              isLoading.value = false;
+
       },
       codeSent: (String verificationId, int? resendToken) {
         _verificationId = verificationId;
         otpSend.value = true;
+              isLoading.value = false;
+
       },
       codeAutoRetrievalTimeout: (String verificationId) {
         _verificationId = verificationId;
+              isLoading.value = false;
+
       },
     );
   }
